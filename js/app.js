@@ -1,6 +1,5 @@
 // Canvas
 var ctx = document.getElementById('canvas').getContext('2d');
-
 canvas.width = 800;
 canvas.height = 600;
 
@@ -8,6 +7,8 @@ canvas.height = 600;
 var titleSound = new Audio('audio/title.mp3');
 var gatherSound = new Audio('audio/gather.wav');
 var gameoverSound = new Audio('audio/gameover.mp3');
+
+// Screen switches
 var titleSoundSwitch = true;
 var gameoverSoundSwitch = true;
 
@@ -29,13 +30,37 @@ playerImage.onload = function() {
 };
 playerImage.src = 'img/ufo.png';
 
-// Alien image
-var alienReady = false;
-var alienImage = new Image();
-alienImage.onload = function() {
-  alienReady = true;
+// Alien1 image
+var alien1Ready = false;
+var alien1Image = new Image();
+alien1Image.onload = function() {
+  alien1Ready = true;
 };
-alienImage.src = 'img/alien.png';
+alien1Image.src = 'img/alien1.png';
+
+// Alien2 image
+var alien2Ready = false;
+var alien2Image = new Image();
+alien2Image.onload = function() {
+  alien2Ready = true;
+};
+alien2Image.src = 'img/alien2.png';
+
+// Alien3 image
+var alien3Ready = false;
+var alien3Image = new Image();
+alien3Image.onload = function() {
+  alien3Ready = true;
+};
+alien3Image.src = 'img/alien3.png';
+
+// Alien4 image
+var alien4Ready = false;
+var alien4Image = new Image();
+alien4Image.onload = function() {
+  alien4Ready = true;
+};
+alien4Image.src = 'img/alien4.png';
 
 // Title screen
 var titleReady = false;
@@ -61,9 +86,17 @@ var player = {
   speed: 350,
 };
 
+// Aliens
+var alien1 = {};
+var alien2 = {};
+var alien3 = {};
+var alien4 = {};
+var alien2Switch = true;
+var alien3Switch = true;
+var alien4Switch = 1;
+
 // Score
-var score = {};
-var scoreAmp = 0;
+var score = 0;
 
 //===============================================
 
@@ -93,33 +126,93 @@ window.addEventListener("keydown", function(e) {
 //===============================================
 
 // Reset when player scores
-var playerReset = true;
+var playerSet = false;
+var alienSet = false;
+var alien1Reset = false;
+var alien1Count = 0;
+var alien2Reset = false;
+var alien2Count = 0;
+var alien3Reset = false;
+var alien3Count = 0;
+var alien4Reset = false;
+var alien4Count = 0;
 
 var reset = function() {
-  if (playerReset === true) {     // If playReset is true then set player
+  if (playerSet === false) {     // If playerSet is false then set player
+    player.w = 70;
+    player.h = 49;
     player.x = 50;
     player.y = 200;
-    player.w = 70;
-    player.h = 49;
-    playerReset = false;
+
+    playerSet = true;
   };
 
-  if (playerReset === false) {    // If playerReset is false then reset player to current x and y positions
-    player.x = player.x;
-    player.y = player.y
-    player.w = 70;
-    player.h = 49;
+  if (alienSet === false) {     // If alienSet is false then set aliens
+    // Alien1
+    alien1.w = 45;
+    alien1.h = 45;
+    alien1.x = 45 + (Math.random() * (canvas.width - alien1.w));
+    alien1.y = 45 + (Math.random() * (canvas.height - alien1.h));
+
+    // Alien2
+    alien2.w = 45;
+    alien2.h = 45;
+    alien2.x = 45 + (Math.random() * (canvas.width - alien2.w));
+    alien2.y = 45 + (Math.random() * (canvas.height - alien2.h));
+
+    // Alien3
+    alien3.w = 45;
+    alien3.h = 45;
+    alien3.x = 45 + (Math.random() * (canvas.width - alien3.w));
+    alien3.y = 45 + (Math.random() * (canvas.height - alien3.h));
+
+    // Alien4
+    alien4.w = 45;
+    alien4.h = 45;
+    alien4.x = 45 + (Math.random() * (canvas.width - alien4.w));
+    alien4.y = 45 + (Math.random() * (canvas.height - alien4.h));
+
+    alienSet = true;
   };
 
-  // Random score objects
-  score.w = 45;
-  score.h = 45;
+  if (alienSet === true) {     // If alienSet is true and if alienReset is true then reset aliens
+    if (alien1Reset === true) {
+      alien1.w = 45;
+      alien1.h = 45;
+      alien1.x = 45 + (Math.random() * (canvas.width - alien1.w));
+      alien1.y = 45 + (Math.random() * (canvas.height - alien1.h));
 
-  score.x = 45 + (Math.random() * (canvas.width - score.w));
-  score.y = 45 + (Math.random() * (canvas.height - score.h));
+      alien1Reset = false;
+    };
 
-  console.log("Score: " + scoreAmp);
+    if (alien2Reset === true) {
+      alien2.w = 45;
+      alien2.h = 45;
+      alien2.x = 45 + (Math.random() * (canvas.width - alien2.w));
+      alien2.y = 45 + (Math.random() * (canvas.height - alien2.h));
 
+      alien2Reset = false;
+    };
+
+    if (alien3Reset === true) {
+      alien3.w = 45;
+      alien3.h = 45;
+      alien3.x = 45 + (Math.random() * (canvas.width - alien3.w));
+      alien3.y = 45 + (Math.random() * (canvas.height - alien3.h));
+
+      alien3Reset = false;
+    };
+
+    if (alien4Reset === true) {
+      alien4.w = 45;
+      alien4.h = 45;
+      alien4.x = 45 + (Math.random() * (canvas.width - alien4.w));
+      alien4.y = 45 + (Math.random() * (canvas.height - alien4.h));
+
+      alien4Reset = false;
+    };
+  };
+  console.log('Score: ' + score);
 };
 
 //===============================================
@@ -142,48 +235,212 @@ var update = function(modifier) {
     player.x += player.speed * modifier;
   };
 
+//===============================================
+
+  // Alien2 movement
+  if (alien2Switch === true) {
+    alien2.y += 2;
+    if (alien2.y > 440) {
+      alien2Switch = false;
+    };
+  };
+    
+  if (alien2Switch === false) {
+    alien2.y -= 2;
+    if (alien2.y < 15) {
+      alien2Switch = true;
+    };
+  };
+
+  // Alien3 movement
+  if (alien3Switch === true) {
+    alien3.x += 10;
+    if (alien3.x > 725) {
+      alien3Switch = false;
+    };
+  };
+    
+  if (alien3Switch === false) {
+    alien3.x -= 10;
+    if (alien3.x < 15) {
+      alien3Switch = true;
+    };
+  };
+
+  // Alien4 movement
+  if (alien4Switch === 1) {
+    alien4.x -= 15;
+    if (alien4.x < 15) {
+      alien4Switch = 2;
+    };
+  };
+    
+  if (alien4Switch === 2) {
+    alien4.y += 15;
+    if (alien4.y > 440) {
+      alien4Switch = 3;
+    };
+  };
+
+  if (alien4Switch === 3) {
+    alien4.x += 15;
+    if (alien4.x > 725) {
+      alien4Switch = 4;
+    };
+  };
+
+  if (alien4Switch === 4) {
+    alien4.y -= 15;
+    if (alien4.y < 15) {
+      alien4Switch = 1;
+    };
+  };
+
   //===============================================
 
-  // If player is touching object
+  // If player is touching alien1
   if (
-    player.x <= (score.x + (score.w / 2) + 10)
-    && score.x <= (player.x + (player.w / 2) + 20)
-    && player.y <= (score.y + (score.w / 2) + 10)
-    && score.y <= (player.y + (player.w / 2) + 5)
+    player.x <= (alien1.x + (alien1.w / 2) + 10)
+    && alien1.x <= (player.x + (player.w / 2) + 20)
+    && player.y <= (alien1.y + (alien1.w / 2) + 10)
+    && alien1.y <= (player.y + (player.w / 2) + 5)
     ) {
       gatherSound.play();     // Sound effect
-      scoreAmp += 100;
+      score += 100;
+      alien1Count += 1;
+      alien1Reset = true;
       reset();
   };
+
+  // If player is touching alien2
+  if (
+    player.x <= (alien2.x + (alien2.w / 2) + 10)
+    && alien2.x <= (player.x + (player.w / 2) + 20)
+    && player.y <= (alien2.y + (alien2.w / 2) + 10)
+    && alien2.y <= (player.y + (player.w / 2) + 5)
+    ) {
+      gatherSound.play();     // Sound effect
+      score += 200;
+      alien2Count +=1;
+      alien2Reset = true;
+      reset();
+  };
+
+  // If player is touching alien3
+  if (
+    player.x <= (alien3.x + (alien3.w / 2) + 10)
+    && alien3.x <= (player.x + (player.w / 2) + 20)
+    && player.y <= (alien3.y + (alien3.w / 2) + 10)
+    && alien3.y <= (player.y + (player.w / 2) + 5)
+    ) {
+      gatherSound.play();     // Sound effect
+      score += 300;
+      alien3Count += 1;
+      alien3Reset = true;
+      reset();
+  };
+
+  // If player is touching alien4
+  if (
+    player.x <= (alien4.x + (alien4.w / 2) + 10)
+    && alien4.x <= (player.x + (player.w / 2) + 20)
+    && player.y <= (alien4.y + (alien4.w / 2) + 10)
+    && alien4.y <= (player.y + (player.w / 2) + 5)
+    ) {
+      gatherSound.play();     // Sound effect
+      score += 400;
+      alien4Count += 1;
+      alien4Reset = true;
+      reset();
+  };
+
+//===============================================
 
   // Player canvas boundaries
   if (player.x >= canvas.width - (playerImage.width / 6) + 5) {
       player.x = canvas.width - (playerImage.width / 6) + 5;
   };
+
   if (player.x <= - 5) {
       player.x = - 5;
   };
-  if (player.y >= canvas.height - playerImage.height + 5) {
-      player.y = canvas.height - playerImage.height + 5;
+
+  if (player.y >= canvas.height - playerImage.height - 95) {
+      player.y = canvas.height - playerImage.height - 95;
   };
+
   if (player.y <= - 4) {
       player.y = - 4;
   };
 
 //===============================================
 
-  // Score canvas boundaries
-  if (score.x >= canvas.width - alienImage.width -20) {
-      score.x = canvas.width - alienImage.width -20;
+  // Alien1 canvas boundaries
+  if (alien1.x >= canvas.width - alien1Image.width + 5) {
+      alien1.x = canvas.width - alien1Image.width + 5;
   };
-  if (score.x <= 20) {
-      score.x = 20;
+
+  if (alien1.x <= 5) {
+      alien1.x = 5;
   };
-  if (score.y >= canvas.height - alienImage.height -20) {
-      score.y = canvas.height - alienImage.height -20;
+
+  if (alien1.y >= canvas.height - alien1Image.height - 105) {
+      alien1.y = canvas.height - alien1Image.height - 105;
   };
-  if (score.y <= 10) {
-      score.y = 10;
+
+  if (alien1.y <= 5) {
+      alien1.y = 5;
+  };
+
+  // Alien2 canvas boundaries
+  if (alien2.x >= canvas.width - alien2Image.width + 5) {
+      alien2.x = canvas.width - alien2Image.width + 5;
+  };
+
+  if (alien2.x <= 5) {
+      alien2.x = 5;
+  };
+
+  if (alien2.y >= canvas.height - alien2Image.height - 105) {
+      alien2.y = canvas.height - alien2Image.height - 105;
+  };
+
+  if (alien2.y <= 5) {
+      alien2.y = 5;
+  };
+
+  // Alien3 canvas boundaries
+  if (alien3.x >= canvas.width - alien3Image.width + 5) {
+      alien3.x = canvas.width - alien3Image.width + 5;
+  };
+
+  if (alien3.x <= 5) {
+      alien3.x = 5;
+  };
+
+  if (alien3.y >= canvas.height - alien3Image.height - 105) {
+      alien3.y = canvas.height - alien3Image.height - 105;
+  };
+
+  if (alien3.y <= 5) {
+      alien3.y = 5;
+  };
+
+  // Alien4 canvas boundaries
+  if (alien4.x >= canvas.width - alien4Image.width + 5) {
+      alien4.x = canvas.width - alien4Image.width + 5;
+  };
+
+  if (alien4.x <= 5) {
+      alien4.x = 5;
+  };
+
+  if (alien4.y >= canvas.height - alien4Image.height - 105) {
+      alien4.y = canvas.height - alien4Image.height - 105;
+  };
+
+  if (alien4.y <= 5) {
+      alien4.y = 5;
   };
 };
 
@@ -269,11 +526,14 @@ var render = function() {
 
   if (32 in keysDown2) {     // If space is pressed
     ctx.drawImage(bgImage, 0, 0);
-    ctx.drawImage(alienImage, score.x, score.y);
+    ctx.drawImage(alien1Image, alien1.x, alien1.y);
+    ctx.drawImage(alien2Image, alien2.x, alien2.y);
+    ctx.drawImage(alien3Image, alien3.x, alien3.y);
+    ctx.drawImage(alien4Image, alien4.x, alien4.y);
 
  //===============================================   
 
-    // Ufo Animation
+    // player Animation
     if (ufoAnim1 === true) {
       ctx.drawImage(playerImage, 0, 0, 70, 49, player.x, player.y, 70, 49);
     };
@@ -299,27 +559,29 @@ var render = function() {
     };
 
 //===============================================
-
+    
+    // Title screen clear
     if (titleSoundSwitch === true) {
       titleSound.play();     // Sound effect
     };
     titleSoundSwitch = false;
 
     // Score
-    ctx.fillStyle = "white";
-    ctx.font = "18px Helvetica";
-    ctx.textAlign = "left";
-    ctx.textBaseline = "top";
-    ctx.fillText("Score: " + scoreAmp, 10, 425);
+    ctx.fillStyle = 'white';
+    ctx.font = '18px Helvetica';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    ctx.fillText('Score: ' + score, 10, 425);
 
     // Start timer
     secondsStart = true;
 
-    ctx.fillStyle = "white";
-    ctx.font = "18px Helvetica";
-    ctx.textAlign = "left";
-    ctx.textBaseline = "top";
-    ctx.fillText("Time: " +  seconds, 10, 20);
+    // Time
+    ctx.fillStyle = 'white';
+    ctx.font = '18px Helvetica';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    ctx.fillText('Time: ' +  seconds, 10, 20);
   };
 
 //===============================================  
@@ -340,11 +602,11 @@ var render = function() {
     };
 
     // Score
-    ctx.fillStyle = "white";
-    ctx.font = "18px Helvetica";
-    ctx.textAlign = "left";
-    ctx.textBaseline = "top";
-    ctx.fillText("Gathered: " + scoreAmp, 10, 425);
+    ctx.fillStyle = 'white';
+    ctx.font = '18px Helvetica';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    ctx.fillText('Score: ' + score, 10, 425);
 
 //===============================================
 
@@ -352,7 +614,7 @@ var render = function() {
     if (scoreUpdated === false) {     // Only add once
       scoreUpdated = true;
       document.getElementById('scores').innerHTML = '';
-      addScore(scoreAmp);
+      addScore(score);
       printScore();
     };
   };
@@ -360,11 +622,11 @@ var render = function() {
 
 //===============================================
 
-// Local storage for score (jquery)
+// Local storage for alien1 (jquery)
 var scoreList = [35, 31, 27, 25, 20];
 
-var addScore = function(scoreAmp) {
-  scoreList.push(scoreAmp);
+var addScore = function(score) {
+  scoreList.push(score);
   saveScoreListToBrowser();
 };
 
