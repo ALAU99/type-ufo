@@ -20,7 +20,7 @@ var bgImage = new Image();
 bgImage.onload = function() {
   bgReady = true;
 };
-bgImage.src = 'img/background.jpg';
+bgImage.src = 'img/background.png';
 
 // Player image
 var playerReady = false;
@@ -212,7 +212,10 @@ var reset = function() {
       alien4Reset = false;
     };
   };
-  console.log('Score: ' + score);
+  console.log('Score: ' + score + ' | ' + 'Alien Type 1: ' + alien1Count
+              + ' | ' + 'Alien Type 2: ' + alien2Count + ' | '
+              + 'Alien Type 3: ' + alien3Count + ' | '
+              + 'Alien Type 4: ' + alien4Count);
 };
 
 //===============================================
@@ -269,28 +272,28 @@ var update = function(modifier) {
 
   // Alien4 movement
   if (alien4Switch === 1) {
-    alien4.x -= 15;
+    alien4.x -= 12;
     if (alien4.x < 15) {
       alien4Switch = 2;
     };
   };
     
   if (alien4Switch === 2) {
-    alien4.y += 15;
+    alien4.y += 12;
     if (alien4.y > 440) {
       alien4Switch = 3;
     };
   };
 
   if (alien4Switch === 3) {
-    alien4.x += 15;
+    alien4.x += 12;
     if (alien4.x > 725) {
       alien4Switch = 4;
     };
   };
 
   if (alien4Switch === 4) {
-    alien4.y -= 15;
+    alien4.y -= 12;
     if (alien4.y < 15) {
       alien4Switch = 1;
     };
@@ -300,8 +303,8 @@ var update = function(modifier) {
 
   // If player is touching alien1
   if (
-    player.x <= (alien1.x + (alien1.w / 2) + 10)
-    && alien1.x <= (player.x + (player.w / 2) + 20)
+    player.x <= (alien1.x + (alien1.w / 2) + 20)
+    && alien1.x <= (player.x + (player.w / 2) + 5)
     && player.y <= (alien1.y + (alien1.w / 2) + 10)
     && alien1.y <= (player.y + (player.w / 2) + 5)
     ) {
@@ -314,8 +317,8 @@ var update = function(modifier) {
 
   // If player is touching alien2
   if (
-    player.x <= (alien2.x + (alien2.w / 2) + 10)
-    && alien2.x <= (player.x + (player.w / 2) + 20)
+    player.x <= (alien2.x + (alien2.w / 2) + 20)
+    && alien2.x <= (player.x + (player.w / 2) + 5)
     && player.y <= (alien2.y + (alien2.w / 2) + 10)
     && alien2.y <= (player.y + (player.w / 2) + 5)
     ) {
@@ -330,8 +333,8 @@ var update = function(modifier) {
   if (
     player.x <= (alien3.x + (alien3.w / 2) + 10)
     && alien3.x <= (player.x + (player.w / 2) + 20)
-    && player.y <= (alien3.y + (alien3.w / 2) + 10)
-    && alien3.y <= (player.y + (player.w / 2) + 5)
+    && player.y <= (alien3.y + (alien3.w / 2) + 5)
+    && alien3.y <= (player.y + (player.w / 2) - 5)
     ) {
       gatherSound.play();     // Sound effect
       score += 300;
@@ -342,9 +345,9 @@ var update = function(modifier) {
 
   // If player is touching alien4
   if (
-    player.x <= (alien4.x + (alien4.w / 2) + 10)
-    && alien4.x <= (player.x + (player.w / 2) + 20)
-    && player.y <= (alien4.y + (alien4.w / 2) + 10)
+    player.x <= (alien4.x + (alien4.w / 2) + 5)
+    && alien4.x <= (player.x + (player.w / 2) + 5)
+    && player.y <= (alien4.y + (alien4.w / 2) + 5)
     && alien4.y <= (player.y + (player.w / 2) + 5)
     ) {
       gatherSound.play();     // Sound effect
@@ -393,8 +396,8 @@ var update = function(modifier) {
   };
 
   // Alien2 canvas boundaries
-  if (alien2.x >= canvas.width - alien2Image.width + 5) {
-      alien2.x = canvas.width - alien2Image.width + 5;
+  if (alien2.x >= canvas.width - (alien2Image.width / 3) + 5) {
+      alien2.x = canvas.width - (alien2Image.width / 3) + 5;
   };
 
   if (alien2.x <= 5) {
@@ -410,8 +413,8 @@ var update = function(modifier) {
   };
 
   // Alien3 canvas boundaries
-  if (alien3.x >= canvas.width - alien3Image.width + 5) {
-      alien3.x = canvas.width - alien3Image.width + 5;
+  if (alien3.x >= canvas.width - (alien3Image.width / 5) + 5) {
+      alien3.x = canvas.width - (alien3Image.width / 5) + 5;
   };
 
   if (alien3.x <= 5) {
@@ -427,8 +430,8 @@ var update = function(modifier) {
   };
 
   // Alien4 canvas boundaries
-  if (alien4.x >= canvas.width - alien4Image.width + 5) {
-      alien4.x = canvas.width - alien4Image.width + 5;
+  if (alien4.x >= canvas.width - (alien4Image.width / 4) + 5) {
+      alien4.x = canvas.width - (alien4Image.width / 4) + 5;
   };
 
   if (alien4.x <= 5) {
@@ -466,6 +469,27 @@ var interval = setInterval(function() {
 // Animation timer
 var secondsAnim = 0;
 var secondsAnimEnd = 60;
+
+var alien1Anim1 = true;
+var alien1Anim2 = false;
+var alien1Anim3 = false;
+var alien1Anim4 = false;
+
+var alien2Anim1 = true;
+var alien2Anim2 = false;
+var alien2Anim3 = false;
+
+var alien3Anim1 = true;
+var alien3Anim2 = false;
+var alien3Anim3 = false;
+var alien3Anim4 = false;
+var alien3Anim5 = false;
+
+var alien4Anim1 = true;
+var alien4Anim2 = false;
+var alien4Anim3 = false;
+var alien4Anim4 = false;
+
 var ufoAnim1 = true;
 var ufoAnim2 = false;
 var ufoAnim3 = false;
@@ -477,6 +501,18 @@ var intervalAnim = setInterval(function() {
   ++secondsAnim;
 
   if (secondsAnim === 1) {
+    alien1Anim4 = false;
+    alien1Anim1 = true;
+
+    alien2Anim3 = false;
+    alien2Anim1 = true;
+
+    alien3Anim5 = false;
+    alien3Anim1 = true;
+
+    alien4Anim4 = false;
+    alien4Anim1 = true;
+
     ufoAnim6 = false;
     ufoAnim1 = true;
   };
@@ -484,19 +520,52 @@ var intervalAnim = setInterval(function() {
   if (secondsAnim === 10) {
     ufoAnim1 = false;
     ufoAnim2 = true;
+
+    alien4Anim1 = false;
+    alien4Anim2 = true;
+
+    alien3Anim1 = false;
+    alien3Anim2 = true;
   };
 
   if (secondsAnim === 20) {
+    alien1Anim1 = false;
+    alien1Anim2 = true;
+
+    alien2Anim1 = false;
+    alien2Anim2 = true;
+
+    alien3Anim2 = false;
+    alien3Anim3 = true;
+
+    alien4Anim2 = false;
+    alien4Anim3 = true;
+
     ufoAnim2 = false;
     ufoAnim3 = true;
   };
 
   if (secondsAnim === 30) {
+    alien1Anim2 = false;
+    alien1Anim3 = true;
+
+    alien3Anim3 = false;
+    alien3Anim4 = true;
+
+    alien4Anim3 = false;
+    alien4Anim4 = true;
+
     ufoAnim3 = false;
     ufoAnim4 = true;  
   };
 
   if (secondsAnim === 40) {
+    alien2Anim2 = false;
+    alien2Anim3 = true;
+
+    alien3Anim4 = false;
+    alien3Anim5 = true;
+
     ufoAnim4 = false;
     ufoAnim5 = true;
   };
@@ -504,6 +573,9 @@ var intervalAnim = setInterval(function() {
   if (secondsAnim === 50) {
     ufoAnim5 = false;
     ufoAnim6 = true;
+
+    alien1Anim3 = false;
+    alien1Anim4 = true;
   };
 
   if (secondsAnim === 60) {
@@ -526,14 +598,79 @@ var render = function() {
 
   if (32 in keysDown2) {     // If space is pressed
     ctx.drawImage(bgImage, 0, 0);
-    ctx.drawImage(alien1Image, alien1.x, alien1.y);
-    ctx.drawImage(alien2Image, alien2.x, alien2.y);
-    ctx.drawImage(alien3Image, alien3.x, alien3.y);
-    ctx.drawImage(alien4Image, alien4.x, alien4.y);
 
- //===============================================   
+ //=============================================== 
 
-    // player Animation
+    // alien1 animation
+    if (alien1Anim1 === true) {
+      ctx.drawImage(alien1Image, 0, 0, 70, 49, alien1.x, alien1.y, 70, 49);
+    };
+
+    if (alien1Anim2 === true) {
+      ctx.drawImage(alien1Image, 70, 0, 70, 49, alien1.x, alien1.y, 70, 49);
+    };
+
+    if (alien1Anim3 === true) {
+      ctx.drawImage(alien1Image, 140, 0, 70, 49, alien1.x, alien1.y, 70, 49);
+    };
+
+    if (alien1Anim4 === true) {
+      ctx.drawImage(alien1Image, 210, 0, 70, 49, alien1.x, alien1.y, 70, 49);
+    };
+
+    // alien2 animation
+    if (alien2Anim1 === true) {
+      ctx.drawImage(alien2Image, 0, 0, 70, 49, alien2.x, alien2.y, 70, 49);
+    };
+
+    if (alien2Anim2 === true) {
+      ctx.drawImage(alien2Image, 70, 0, 70, 49, alien2.x, alien2.y, 70, 49);
+    };
+
+    if (alien2Anim3 === true) {
+      ctx.drawImage(alien2Image, 140, 0, 70, 49, alien2.x, alien2.y, 70, 49);
+    };
+
+    // alien3 animation
+    if (alien3Anim1 === true) {
+      ctx.drawImage(alien3Image, 0, 0, 70, 49, alien3.x, alien3.y, 70, 49);
+    };
+
+    if (alien3Anim2 === true) {
+      ctx.drawImage(alien3Image, 70, 0, 70, 49, alien3.x, alien3.y, 70, 49);
+    };
+
+    if (alien3Anim3 === true) {
+      ctx.drawImage(alien3Image, 140, 0, 70, 49, alien3.x, alien3.y, 70, 49);
+    };
+
+    if (alien3Anim4 === true) {
+      ctx.drawImage(alien3Image, 210, 0, 70, 49, alien3.x, alien3.y, 70, 49);
+    };
+
+    if (alien3Anim5 === true) {
+      ctx.drawImage(alien3Image, 280, 0, 70, 49, alien3.x, alien3.y, 70, 49);
+    };
+
+    // alien4 animation
+    if (alien4Anim1 === true) {
+      ctx.drawImage(alien4Image, 0, 0, 70, 49, alien4.x, alien4.y, 70, 49);
+    };
+
+    if (alien4Anim2 === true) {
+      ctx.drawImage(alien4Image, 70, 0, 70, 49, alien4.x, alien4.y, 70, 49);
+    };
+
+    if (alien4Anim3 === true) {
+      ctx.drawImage(alien4Image, 140, 0, 70, 49, alien4.x, alien4.y, 70, 49);
+    };
+
+    if (alien4Anim4 === true) {
+      ctx.drawImage(alien4Image, 210, 0, 70, 49, alien4.x, alien4.y, 70, 49);
+    };
+
+
+    // player animation
     if (ufoAnim1 === true) {
       ctx.drawImage(playerImage, 0, 0, 70, 49, player.x, player.y, 70, 49);
     };
@@ -568,20 +705,16 @@ var render = function() {
 
     // Score
     ctx.fillStyle = 'white';
-    ctx.font = '18px Helvetica';
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'top';
-    ctx.fillText('Score: ' + score, 10, 425);
+    ctx.font = "16px 'Press Start 2P'";
+    ctx.fillText('Score: ' + score, 560, 555);
 
     // Start timer
     secondsStart = true;
 
     // Time
     ctx.fillStyle = 'white';
-    ctx.font = '18px Helvetica';
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'top';
-    ctx.fillText('Time: ' +  seconds, 10, 20);
+    ctx.font = "16px 'Press Start 2P'";
+    ctx.fillText('Time: ' +  seconds, 80, 555);
   };
 
 //===============================================  
@@ -603,10 +736,8 @@ var render = function() {
 
     // Score
     ctx.fillStyle = 'white';
-    ctx.font = '18px Helvetica';
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'top';
-    ctx.fillText('Score: ' + score, 10, 425);
+    ctx.font = "16px 'Press Start 2P'";
+    ctx.fillText('Score: ' + score, 560, 555);
 
 //===============================================
 
@@ -649,7 +780,7 @@ var saveScoreListToBrowser = function() {
 var printScore = function() {
   scoreList.sort(function(a,b) { return b - a; });
 
-  for (var i = 0; i < 5; i++) {     // Appends top 5 high scores
+  for (var i = 0; i < 10; i++) {     // Appends top 10 high scores
     $('#scores').append('<p>' + (i + 1) + ') '+ scoreList[i] + '</p>');
   };
 };
@@ -683,6 +814,6 @@ var then = Date.now();
 reset();
 main();
 
-// Print top 5 high score to html
+// Prints top 10 high scores to html
 ScoreInputFromBrowser();
 printScore();
