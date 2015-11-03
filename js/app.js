@@ -5,7 +5,7 @@ canvas.height = 600;
 
 // Sound effects
 var titleSound = new Audio('audio/title.mp3');
-var gatherSound = new Audio('audio/gather.wav');
+var rescueSound = new Audio('audio/rescue.mp3');
 var gameoverSound = new Audio('audio/gameover.mp3');
 
 // Screen switches
@@ -319,7 +319,7 @@ var update = function(modifier) {
       && player.y <= (alien1.y + (alien1.w / 2) + 10)
       && alien1.y <= (player.y + (player.w / 2) + 5)
       ) {
-        gatherSound.play();     // Sound effect
+        rescueSound.play();     // Sound effect
         score += 100;
         alien1Count += 1;
         alien1Reset = true;
@@ -333,7 +333,7 @@ var update = function(modifier) {
       && player.y <= (alien2.y + (alien2.w / 2) + 10)
       && alien2.y <= (player.y + (player.w / 2) + 5)
       ) {
-        gatherSound.play();     // Sound effect
+        rescueSound.play();     // Sound effect
         score += 200;
         alien2Count +=1;
         alien2Reset = true;
@@ -347,7 +347,7 @@ var update = function(modifier) {
       && player.y <= (alien3.y + (alien3.w / 2) + 5)
       && alien3.y <= (player.y + (player.w / 2) - 5)
       ) {
-        gatherSound.play();     // Sound effect
+        rescueSound.play();     // Sound effect
         score += 300;
         alien3Count += 1;
         alien3Reset = true;
@@ -361,7 +361,7 @@ var update = function(modifier) {
       && player.y <= (alien4.y + (alien4.w / 2) + 5)
       && alien4.y <= (player.y + (player.w / 2) + 5)
       ) {
-        gatherSound.play();     // Sound effect
+        rescueSound.play();     // Sound effect
         score += 400;
         alien4Count += 1;
         alien4Reset = true;
@@ -751,7 +751,7 @@ var render = function() {
     // Score
     ctx.fillStyle = 'white';
     ctx.font = "16px 'Press Start 2P'";
-    ctx.fillText('Score: ' + score, 480, 555);
+    ctx.fillText('SCORE: ' + score, 480, 555);
 
     // Start timer
     secondsStart = true;
@@ -759,7 +759,7 @@ var render = function() {
     // Time
     ctx.fillStyle = 'white';
     ctx.font = "16px 'Press Start 2P'";
-    ctx.fillText('Time: ' +  seconds, 160, 555);
+    ctx.fillText('TIME: ' +  seconds, 160, 555);
   };
 
 //===============================================  
@@ -779,15 +779,17 @@ var render = function() {
      location.reload();
     };
 
-    // Score
     ctx.fillStyle = 'white';
     ctx.font = "16px 'Press Start 2P'";
-    ctx.fillText('Score: ' + score, 480, 555);
 
-    // Time
-    ctx.fillStyle = 'white';
-    ctx.font = "16px 'Press Start 2P'";
-    ctx.fillText('Time: ' +  seconds, 160, 555);
+    // Aliens rescued
+    ctx.fillText(' = ' + ' ' + alien1Count, 385, 85);
+    ctx.fillText(' = ' + ' ' + alien2Count, 385, 165);
+    ctx.fillText(' = ' + ' ' + alien3Count, 385, 235);
+    ctx.fillText(' = ' + ' ' + alien4Count, 385, 295);
+    ctx.fillText('TIME: ' +  seconds, 160, 555);
+    ctx.fillText('SCORE: ' + score, 480, 555);
+
 
 //===============================================
 
