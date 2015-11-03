@@ -70,6 +70,14 @@ titleImage.onload = function() {
 };
 titleImage.src = "img/title.png";
 
+// Title2 image
+var title2Ready = false;
+var title2Image = new Image();
+title2Image.onload = function() {
+  title2Ready = true;
+};
+title2Image.src = "img/type-ufo.png";
+
 // Gameover and replay screen
 var gameoverReady = false;
 var gameoverImage = new Image();
@@ -141,8 +149,8 @@ var reset = function() {
   if (playerSet === false) {     // If playerSet is false then set player
     player.w = 70;
     player.h = 49;
-    player.x = 50;
-    player.y = 200;
+    player.x = 350;
+    player.y = 250;
 
     playerSet = true;
   };
@@ -222,228 +230,232 @@ var reset = function() {
 
 // Update sprites
 var update = function(modifier) {
-  if (37 in keysDown) {     // User holding left
-    player.x -= player.speed * modifier;
-  };
 
-  if (40 in keysDown) {     // User holding down
-    player.y += player.speed * modifier;
-  };
+  if (32 in keysDown2 && secondsBool === true) {     // If space is pressed
+  
+    if (37 in keysDown) {     // User holding left
+      player.x -= player.speed * modifier;
+    };
 
-  if (38 in keysDown) {     // User holding up
-    player.y -= player.speed * modifier;
-  };
+    if (40 in keysDown) {     // User holding down
+      player.y += player.speed * modifier;
+    };
 
-  if (39 in keysDown) {     // User holding right
-    player.x += player.speed * modifier;
-  };
+    if (38 in keysDown) {     // User holding up
+      player.y -= player.speed * modifier;
+    };
+
+    if (39 in keysDown) {     // User holding right
+      player.x += player.speed * modifier;
+    };
 
 //===============================================
 
-  // Alien2 movement
-  if (alien2Switch === true) {
-    alien2.y += 2;
-    if (alien2.y > 440) {
-      alien2Switch = false;
+    // Alien2 movement
+    if (alien2Switch === true) {
+      alien2.y += 2;
+      if (alien2.y > 440) {
+        alien2Switch = false;
+      };
     };
-  };
-    
-  if (alien2Switch === false) {
-    alien2.y -= 2;
-    if (alien2.y < 15) {
-      alien2Switch = true;
+      
+    if (alien2Switch === false) {
+      alien2.y -= 2;
+      if (alien2.y < 15) {
+        alien2Switch = true;
+      };
     };
-  };
 
-  // Alien3 movement
-  if (alien3Switch === true) {
-    alien3.x += 10;
-    if (alien3.x > 725) {
-      alien3Switch = false;
+    // Alien3 movement
+    if (alien3Switch === true) {
+      alien3.x += 10;
+      if (alien3.x > 725) {
+        alien3Switch = false;
+      };
     };
-  };
-    
-  if (alien3Switch === false) {
-    alien3.x -= 10;
-    if (alien3.x < 15) {
-      alien3Switch = true;
+      
+    if (alien3Switch === false) {
+      alien3.x -= 10;
+      if (alien3.x < 15) {
+        alien3Switch = true;
+      };
     };
-  };
 
-  // Alien4 movement
-  if (alien4Switch === 1) {
-    alien4.x -= 12;
-    if (alien4.x < 15) {
-      alien4Switch = 2;
+    // Alien4 movement
+    if (alien4Switch === 1) {
+      alien4.x -= 12;
+      if (alien4.x < 15) {
+        alien4Switch = 2;
+      };
     };
-  };
-    
-  if (alien4Switch === 2) {
-    alien4.y += 12;
-    if (alien4.y > 440) {
-      alien4Switch = 3;
+      
+    if (alien4Switch === 2) {
+      alien4.y += 12;
+      if (alien4.y > 440) {
+        alien4Switch = 3;
+      };
     };
-  };
 
-  if (alien4Switch === 3) {
-    alien4.x += 12;
-    if (alien4.x > 725) {
-      alien4Switch = 4;
+    if (alien4Switch === 3) {
+      alien4.x += 12;
+      if (alien4.x > 725) {
+        alien4Switch = 4;
+      };
     };
-  };
 
-  if (alien4Switch === 4) {
-    alien4.y -= 12;
-    if (alien4.y < 15) {
-      alien4Switch = 1;
+    if (alien4Switch === 4) {
+      alien4.y -= 12;
+      if (alien4.y < 15) {
+        alien4Switch = 1;
+      };
     };
-  };
 
   //===============================================
 
-  // If player is touching alien1
-  if (
-    player.x <= (alien1.x + (alien1.w / 2) + 20)
-    && alien1.x <= (player.x + (player.w / 2) + 5)
-    && player.y <= (alien1.y + (alien1.w / 2) + 10)
-    && alien1.y <= (player.y + (player.w / 2) + 5)
-    ) {
-      gatherSound.play();     // Sound effect
-      score += 100;
-      alien1Count += 1;
-      alien1Reset = true;
-      reset();
-  };
+    // If player is touching alien1
+    if (
+      player.x <= (alien1.x + (alien1.w / 2) + 20)
+      && alien1.x <= (player.x + (player.w / 2) + 5)
+      && player.y <= (alien1.y + (alien1.w / 2) + 10)
+      && alien1.y <= (player.y + (player.w / 2) + 5)
+      ) {
+        gatherSound.play();     // Sound effect
+        score += 100;
+        alien1Count += 1;
+        alien1Reset = true;
+        reset();
+    };
 
-  // If player is touching alien2
-  if (
-    player.x <= (alien2.x + (alien2.w / 2) + 20)
-    && alien2.x <= (player.x + (player.w / 2) + 5)
-    && player.y <= (alien2.y + (alien2.w / 2) + 10)
-    && alien2.y <= (player.y + (player.w / 2) + 5)
-    ) {
-      gatherSound.play();     // Sound effect
-      score += 200;
-      alien2Count +=1;
-      alien2Reset = true;
-      reset();
-  };
+    // If player is touching alien2
+    if (
+      player.x <= (alien2.x + (alien2.w / 2) + 20)
+      && alien2.x <= (player.x + (player.w / 2) + 5)
+      && player.y <= (alien2.y + (alien2.w / 2) + 10)
+      && alien2.y <= (player.y + (player.w / 2) + 5)
+      ) {
+        gatherSound.play();     // Sound effect
+        score += 200;
+        alien2Count +=1;
+        alien2Reset = true;
+        reset();
+    };
 
-  // If player is touching alien3
-  if (
-    player.x <= (alien3.x + (alien3.w / 2) + 10)
-    && alien3.x <= (player.x + (player.w / 2) + 20)
-    && player.y <= (alien3.y + (alien3.w / 2) + 5)
-    && alien3.y <= (player.y + (player.w / 2) - 5)
-    ) {
-      gatherSound.play();     // Sound effect
-      score += 300;
-      alien3Count += 1;
-      alien3Reset = true;
-      reset();
-  };
+    // If player is touching alien3
+    if (
+      player.x <= (alien3.x + (alien3.w / 2) + 10)
+      && alien3.x <= (player.x + (player.w / 2) + 20)
+      && player.y <= (alien3.y + (alien3.w / 2) + 5)
+      && alien3.y <= (player.y + (player.w / 2) - 5)
+      ) {
+        gatherSound.play();     // Sound effect
+        score += 300;
+        alien3Count += 1;
+        alien3Reset = true;
+        reset();
+    };
 
-  // If player is touching alien4
-  if (
-    player.x <= (alien4.x + (alien4.w / 2) + 5)
-    && alien4.x <= (player.x + (player.w / 2) + 5)
-    && player.y <= (alien4.y + (alien4.w / 2) + 5)
-    && alien4.y <= (player.y + (player.w / 2) + 5)
-    ) {
-      gatherSound.play();     // Sound effect
-      score += 400;
-      alien4Count += 1;
-      alien4Reset = true;
-      reset();
-  };
-
-//===============================================
-
-  // Player canvas boundaries
-  if (player.x >= canvas.width - (playerImage.width / 6) + 5) {
-      player.x = canvas.width - (playerImage.width / 6) + 5;
-  };
-
-  if (player.x <= - 5) {
-      player.x = - 5;
-  };
-
-  if (player.y >= canvas.height - playerImage.height - 95) {
-      player.y = canvas.height - playerImage.height - 95;
-  };
-
-  if (player.y <= - 4) {
-      player.y = - 4;
-  };
+    // If player is touching alien4
+    if (
+      player.x <= (alien4.x + (alien4.w / 2) + 5)
+      && alien4.x <= (player.x + (player.w / 2) + 5)
+      && player.y <= (alien4.y + (alien4.w / 2) + 5)
+      && alien4.y <= (player.y + (player.w / 2) + 5)
+      ) {
+        gatherSound.play();     // Sound effect
+        score += 400;
+        alien4Count += 1;
+        alien4Reset = true;
+        reset();
+    };
 
 //===============================================
 
-  // Alien1 canvas boundaries
-  if (alien1.x >= canvas.width - alien1Image.width + 5) {
-      alien1.x = canvas.width - alien1Image.width + 5;
-  };
+    // Player canvas boundaries
+    if (player.x >= canvas.width - (playerImage.width / 6) + 5) {
+        player.x = canvas.width - (playerImage.width / 6) + 5;
+    };
 
-  if (alien1.x <= 5) {
-      alien1.x = 5;
-  };
+    if (player.x <= - 5) {
+        player.x = - 5;
+    };
 
-  if (alien1.y >= canvas.height - alien1Image.height - 105) {
-      alien1.y = canvas.height - alien1Image.height - 105;
-  };
+    if (player.y >= canvas.height - playerImage.height - 95) {
+        player.y = canvas.height - playerImage.height - 95;
+    };
 
-  if (alien1.y <= 5) {
-      alien1.y = 5;
-  };
+    if (player.y <= - 4) {
+        player.y = - 4;
+    };
 
-  // Alien2 canvas boundaries
-  if (alien2.x >= canvas.width - (alien2Image.width / 3) + 5) {
-      alien2.x = canvas.width - (alien2Image.width / 3) + 5;
-  };
+//===============================================
 
-  if (alien2.x <= 5) {
-      alien2.x = 5;
-  };
+    // Alien1 canvas boundaries
+    if (alien1.x >= canvas.width - alien1Image.width + 5) {
+        alien1.x = canvas.width - alien1Image.width + 5;
+    };
 
-  if (alien2.y >= canvas.height - alien2Image.height - 105) {
-      alien2.y = canvas.height - alien2Image.height - 105;
-  };
+    if (alien1.x <= 5) {
+        alien1.x = 5;
+    };
 
-  if (alien2.y <= 5) {
-      alien2.y = 5;
-  };
+    if (alien1.y >= canvas.height - alien1Image.height - 105) {
+        alien1.y = canvas.height - alien1Image.height - 105;
+    };
 
-  // Alien3 canvas boundaries
-  if (alien3.x >= canvas.width - (alien3Image.width / 5) + 5) {
-      alien3.x = canvas.width - (alien3Image.width / 5) + 5;
-  };
+    if (alien1.y <= 5) {
+        alien1.y = 5;
+    };
 
-  if (alien3.x <= 5) {
-      alien3.x = 5;
-  };
+    // Alien2 canvas boundaries
+    if (alien2.x >= canvas.width - (alien2Image.width / 3) + 5) {
+        alien2.x = canvas.width - (alien2Image.width / 3) + 5;
+    };
 
-  if (alien3.y >= canvas.height - alien3Image.height - 105) {
-      alien3.y = canvas.height - alien3Image.height - 105;
-  };
+    if (alien2.x <= 5) {
+        alien2.x = 5;
+    };
 
-  if (alien3.y <= 5) {
-      alien3.y = 5;
-  };
+    if (alien2.y >= canvas.height - alien2Image.height - 105) {
+        alien2.y = canvas.height - alien2Image.height - 105;
+    };
 
-  // Alien4 canvas boundaries
-  if (alien4.x >= canvas.width - (alien4Image.width / 4) + 5) {
-      alien4.x = canvas.width - (alien4Image.width / 4) + 5;
-  };
+    if (alien2.y <= 5) {
+        alien2.y = 5;
+    };
 
-  if (alien4.x <= 5) {
-      alien4.x = 5;
-  };
+    // Alien3 canvas boundaries
+    if (alien3.x >= canvas.width - (alien3Image.width / 5) + 5) {
+        alien3.x = canvas.width - (alien3Image.width / 5) + 5;
+    };
 
-  if (alien4.y >= canvas.height - alien4Image.height - 105) {
-      alien4.y = canvas.height - alien4Image.height - 105;
-  };
+    if (alien3.x <= 5) {
+        alien3.x = 5;
+    };
 
-  if (alien4.y <= 5) {
-      alien4.y = 5;
+    if (alien3.y >= canvas.height - alien3Image.height - 105) {
+        alien3.y = canvas.height - alien3Image.height - 105;
+    };
+
+    if (alien3.y <= 5) {
+        alien3.y = 5;
+    };
+
+    // Alien4 canvas boundaries
+    if (alien4.x >= canvas.width - (alien4Image.width / 4) + 5) {
+        alien4.x = canvas.width - (alien4Image.width / 4) + 5;
+    };
+
+    if (alien4.x <= 5) {
+        alien4.x = 5;
+    };
+
+    if (alien4.y >= canvas.height - alien4Image.height - 105) {
+        alien4.y = canvas.height - alien4Image.height - 105;
+    };
+
+    if (alien4.y <= 5) {
+        alien4.y = 5;
+    };
   };
 };
 
@@ -458,7 +470,7 @@ var interval = setInterval(function() {
   if (secondsStart === true) {
     --seconds;
   };
-  if (seconds < 0) {
+  if (seconds === 0) {
     secondsBool = false;
     clearInterval(interval);
   };
@@ -469,6 +481,11 @@ var interval = setInterval(function() {
 // Animation timer
 var secondsAnim = 0;
 var secondsAnimEnd = 60;
+
+var title2Anim1 = true;
+var title2Anim2 = false;
+var title2Anim3 = false;
+var title2Anim4 = false;
 
 var alien1Anim1 = true;
 var alien1Anim2 = false;
@@ -501,6 +518,9 @@ var intervalAnim = setInterval(function() {
   ++secondsAnim;
 
   if (secondsAnim === 1) {
+    title2Anim4 = false;
+    title2Anim1 = true;
+
     alien1Anim4 = false;
     alien1Anim1 = true;
 
@@ -529,6 +549,9 @@ var intervalAnim = setInterval(function() {
   };
 
   if (secondsAnim === 20) {
+    title2Anim1 = false;
+    title2Anim2 = true;
+
     alien1Anim1 = false;
     alien1Anim2 = true;
 
@@ -560,6 +583,9 @@ var intervalAnim = setInterval(function() {
   };
 
   if (secondsAnim === 40) {
+    title2Anim2 = false;
+    title2Anim3 = true;
+
     alien2Anim2 = false;
     alien2Anim3 = true;
 
@@ -571,6 +597,9 @@ var intervalAnim = setInterval(function() {
   };
 
   if (secondsAnim === 50) {
+    title2Anim3 = false;
+    title2Anim4 = true;
+
     ufoAnim5 = false;
     ufoAnim6 = true;
 
@@ -596,10 +625,27 @@ var render = function() {
     ctx.drawImage(titleImage, 0, 0);
   };
 
+  // title2 animation
+  if (title2Anim1 === true) {
+      ctx.drawImage(title2Image, 0, 0, 342, 57, 220, 100, 342, 57);
+  };
+
+  if (title2Anim2 === true) {
+      ctx.drawImage(title2Image, 342, 0, 342, 57, 220, 100, 342, 57);
+  };
+
+  if (title2Anim3 === true) {
+      ctx.drawImage(title2Image, 684, 0, 342, 57, 220, 100, 342, 57);
+  };
+
+  if (title2Anim4 === true) {
+      ctx.drawImage(title2Image, 1368, 0, 342, 57, 220, 100, 342, 57);
+  };
+
+//=============================================== 
+
   if (32 in keysDown2) {     // If space is pressed
     ctx.drawImage(bgImage, 0, 0);
-
- //=============================================== 
 
     // alien1 animation
     if (alien1Anim1 === true) {
@@ -669,7 +715,6 @@ var render = function() {
       ctx.drawImage(alien4Image, 210, 0, 70, 49, alien4.x, alien4.y, 70, 49);
     };
 
-
     // player animation
     if (ufoAnim1 === true) {
       ctx.drawImage(playerImage, 0, 0, 70, 49, player.x, player.y, 70, 49);
@@ -706,7 +751,7 @@ var render = function() {
     // Score
     ctx.fillStyle = 'white';
     ctx.font = "16px 'Press Start 2P'";
-    ctx.fillText('Score: ' + score, 560, 555);
+    ctx.fillText('Score: ' + score, 480, 555);
 
     // Start timer
     secondsStart = true;
@@ -714,7 +759,7 @@ var render = function() {
     // Time
     ctx.fillStyle = 'white';
     ctx.font = "16px 'Press Start 2P'";
-    ctx.fillText('Time: ' +  seconds, 80, 555);
+    ctx.fillText('Time: ' +  seconds, 160, 555);
   };
 
 //===============================================  
@@ -737,7 +782,12 @@ var render = function() {
     // Score
     ctx.fillStyle = 'white';
     ctx.font = "16px 'Press Start 2P'";
-    ctx.fillText('Score: ' + score, 560, 555);
+    ctx.fillText('Score: ' + score, 480, 555);
+
+    // Time
+    ctx.fillStyle = 'white';
+    ctx.font = "16px 'Press Start 2P'";
+    ctx.fillText('Time: ' +  seconds, 160, 555);
 
 //===============================================
 
