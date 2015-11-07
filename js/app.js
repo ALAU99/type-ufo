@@ -89,6 +89,16 @@ gameoverImage.src = "img/gameover.png";
 
 //===============================================
 
+// Local storage for high scores
+var scoreList = [[12000, 'Error'], [11000, 'Ness'], [10500, 'Cloud'], [10000, 'Ranma'], 
+                [9500, 'Pulpi'], [9000, 'Ichigo'], [8500, 'Doomguy'], [8000, 'Simon Belmont'], 
+                [7500, 'Bill Rizer'], [7000, 'DDave']];
+
+//===============================================
+
+// Player score and name
+var scoreAndName = [0];
+
 // Player
 var player = {
   speed: 350,
@@ -102,9 +112,6 @@ var alien4 = {};
 var alien2Switch = true;
 var alien3Switch = true;
 var alien4Switch = 1;
-
-// Score
-var score = 0;
 
 //===============================================
 
@@ -125,7 +132,7 @@ addEventListener('keydown', function(e) {
 });
 
 // To disable space bar and arrow keys for scrolling
-window.addEventListener("keydown", function(e) {
+window.addEventListener('keydown', function(e) {
   if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
     e.preventDefault();
   }
@@ -220,7 +227,7 @@ var reset = function() {
       alien4Reset = false;
     };
   };
-  console.log('Score: ' + score + ' | ' + 'Alien Type 1: ' + alien1Count
+  console.log('Score: ' + scoreAndName[0] + ' | ' + 'Alien Type 1: ' + alien1Count
               + ' | ' + 'Alien Type 2: ' + alien2Count + ' | '
               + 'Alien Type 3: ' + alien3Count + ' | '
               + 'Alien Type 4: ' + alien4Count);
@@ -320,7 +327,7 @@ var update = function(modifier) {
       && alien1.y <= (player.y + (player.w / 2) + 5)
       ) {
         rescueSound.play();     // Sound effect
-        score += 100;
+        scoreAndName[0] += 100;
         alien1Count += 1;
         alien1Reset = true;
         reset();
@@ -334,7 +341,7 @@ var update = function(modifier) {
       && alien2.y <= (player.y + (player.w / 2) + 5)
       ) {
         rescueSound.play();     // Sound effect
-        score += 200;
+        scoreAndName[0] += 200;
         alien2Count +=1;
         alien2Reset = true;
         reset();
@@ -348,7 +355,7 @@ var update = function(modifier) {
       && alien3.y <= (player.y + (player.w / 2) - 5)
       ) {
         rescueSound.play();     // Sound effect
-        score += 300;
+        scoreAndName[0] += 300;
         alien3Count += 1;
         alien3Reset = true;
         reset();
@@ -362,7 +369,7 @@ var update = function(modifier) {
       && alien4.y <= (player.y + (player.w / 2) + 5)
       ) {
         rescueSound.play();     // Sound effect
-        score += 400;
+        scoreAndName[0] += 400;
         alien4Count += 1;
         alien4Reset = true;
         reset();
@@ -751,7 +758,7 @@ var render = function() {
     // Score
     ctx.fillStyle = 'white';
     ctx.font = "16px 'Press Start 2P'";
-    ctx.fillText('SCORE: ' + score, 480, 555);
+    ctx.fillText('SCORE: ' + scoreAndName[0], 480, 555);
 
     // Start timer
     secondsStart = true;
@@ -779,6 +786,7 @@ var render = function() {
      location.reload();
     };
 
+    // Font
     ctx.fillStyle = 'white';
     ctx.font = "16px 'Press Start 2P'";
 
@@ -788,34 +796,59 @@ var render = function() {
     ctx.fillText(' = ' + ' ' + alien3Count, 385, 235);
     ctx.fillText(' = ' + ' ' + alien4Count, 385, 295);
     ctx.fillText('TIME: ' +  seconds, 160, 555);
-    ctx.fillText('SCORE: ' + score, 480, 555);
-
+    ctx.fillText('SCORE: ' + scoreAndName[0], 480, 555);
 
 //===============================================
-
-    // Stop the render function timer
-    if (scoreUpdated === false) {     // Only add once
+    
+    if (scoreUpdated === false) {
       scoreUpdated = true;
-      document.getElementById('scores').innerHTML = '';
-      addScore(score);
-      printScore();
+      compareScore();
     };
   };
 };
 
 //===============================================
 
-// Local storage for alien1 (jquery)
-var scoreList = [35, 31, 27, 25, 20];
+// Compare player score with locally stored high scores
+var compareScore = function() {
+  for (var i = 0; i < scoreList.length; i += 1) {
+    if (scoreAndName[0] > scoreList[i][0]) {
 
-var addScore = function(score) {
-  scoreList.push(score);
-  saveScoreListToBrowser();
+      // var scoreForm = document.createElement('FORM');
+      // scoreForm.setAttribute('id', 'playerinput');
+      // document.body.appendChild(scoreForm);
+
+      // var scoreInput = document.createElement('INPUT');
+      // scoreInput.setAttribute('type', 'text');
+      // scoreInput.setAttribute('maxlength', 18);
+      // document.getElementById('playerinput').appendChild(scoreInput);
+
+      if (i = scoreList.length) { //     If i = 10 then clear, add, and print new high score to HTML
+        document.getElementById('scores').innerHTML = '';
+        addScore(scoreAndName);
+        printScore();
+      };
+    };
+  };
 };
 
-$(window).load(function() {
-  ScoreInputFromBrowser();
-});
+var scoreForm = document.createElement('FORM');
+      scoreForm.setAttribute('id', 'playerinput');
+      document.body.appendChild(scoreForm);
+
+      var scoreInput = document.createElement('INPUT');
+      scoreInput.setAttribute('type', 'text');
+      scoreInput.setAttribute('maxlength', 18);
+      scoreInput.setAttribute('style', 'text-transform: uppercase');
+      document.getElementById('playerinput').appendChild(scoreInput);
+
+
+
+// Adds player score to scoreList
+var addScore = function(playerData) {
+  scoreList.push(playerData);
+  saveScoreListToBrowser();
+};
 
 var ScoreInputFromBrowser = function() {
   var getScore = localStorage.getItem('jsonScore');
@@ -830,10 +863,10 @@ var saveScoreListToBrowser = function() {
 };
 
 var printScore = function() {
-  scoreList.sort(function(a,b) { return b - a; });
+  scoreList.sort(function(a, b) {return b - a; });
 
-  for (var i = 0; i < 10; i++) {     // Appends top 10 high scores
-    $('#scores').append('<p>' + (i + 1) + ') '+ scoreList[i] + '</p>');
+  for (var i = 0; i < 10; i += 1) {     // Appends top 10 high scores
+    $('#scores').append('<p>' + (i + 1) + ' | '+ scoreList[i][0] + ' | ' + scoreList[i][1] + '</p>');
   };
 };
 
@@ -855,9 +888,13 @@ var main = function() {
 
 //===============================================
 
-// Cross browser support (animation or redrawing on canvas)
 var w = window;
-requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.msRequestAnimationFrame || w.mozRequestAnimationFrame;
+
+// Cross browser support (animation or redrawing on canvas)
+requestAnimationFrame = w.requestAnimationFrame ||
+                  w.webkitRequestAnimationFrame || 
+                      w.msRequestAnimationFrame || 
+                      w.mozRequestAnimationFrame;
 
 //===============================================
 
@@ -866,6 +903,6 @@ var then = Date.now();
 reset();
 main();
 
-// Prints top 10 high scores to html
+// Prints top 10 high scores to html on load
 ScoreInputFromBrowser();
 printScore();
