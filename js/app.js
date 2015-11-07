@@ -7,10 +7,12 @@ canvas.height = 600;
 var titleSound = new Audio('audio/title.mp3');
 var rescueSound = new Audio('audio/rescue.mp3');
 var gameoverSound = new Audio('audio/gameover.mp3');
+var highScoreSound = new Audio('audio/highscore.mp3');
 
 // Screen switches
 var titleSoundSwitch = true;
 var gameoverSoundSwitch = true;
+var highScoreSoundSwitch = true;
 
 //===============================================
 
@@ -68,7 +70,7 @@ var titleImage = new Image();
 titleImage.onload = function() {
   titleReady = true;
 };
-titleImage.src = "img/title.png";
+titleImage.src = 'img/title.png';
 
 // Title2 image
 var title2Ready = false;
@@ -76,16 +78,23 @@ var title2Image = new Image();
 title2Image.onload = function() {
   title2Ready = true;
 };
-title2Image.src = "img/type-ufo.png";
+title2Image.src = 'img/type-ufo.png';
 
 // Gameover and replay screen
 var gameoverReady = false;
 var gameoverImage = new Image();
 gameoverReady.onload = function() {
   gameoverReady = true;
-  gameoverLoad = false;
 };
-gameoverImage.src = "img/gameover.png";
+gameoverImage.src = 'img/gameover.png';
+
+// High score screen
+var highScoreReady = false;
+var highScoreImage = new Image();
+highScoreReady.onload = function() {
+  highScoreReady = true;
+};
+highScoreImage.src = 'img/highscore.png';
 
 //===============================================
 
@@ -98,6 +107,15 @@ var scoreList = [[12000, 'Error'], [11000, 'Ness'], [10500, 'Cloud'], [10000, 'R
 
 // Player score and name
 var scoreAndName = [0];
+var playerName = false;
+
+// Get player name and push to scoreAndName
+var getPlayerName = function() {
+    var getPlayerInput = document.getElementsByName('pname')[0].value;
+    var playerInputConvert = getPlayerInput.toUpperCase();
+    scoreAndName.push(playerInputConvert);
+    playerName = true;
+};
 
 // Player
 var player = {
@@ -117,7 +135,8 @@ var alien4Switch = 1;
 
 // Event listeners
 var keysDown = {};     // Keydown = true | Keyup = false
-var keysDown2 = {};     // Keydown = true
+var spaceStart = false;
+var disableDefaultKeys = [37, 38, 29, 40, 32];
 
 addEventListener('keydown', function(e) {
   keysDown[e.keyCode] = true;
@@ -127,13 +146,9 @@ addEventListener('keyup', function(e) {
   delete keysDown[e.keyCode];
 }, false);
 
-addEventListener('keydown', function(e) {
-  keysDown2[e.keyCode] = true;
-});
-
 // To disable space bar and arrow keys for scrolling
-window.addEventListener('keydown', function(e) {
-  if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+addEventListener('keydown', function(e) {
+  if (disableDefaultKeys.indexOf(e.keyCode) > -1) {
     e.preventDefault();
   }
 }, false);
@@ -238,7 +253,11 @@ var reset = function() {
 // Update sprites
 var update = function(modifier) {
 
-  if (32 in keysDown2 && secondsBool === true) {     // If space is pressed
+  if (32 in keysDown) {     // If space is pressed
+      spaceStart = true;
+  };
+
+  if (spaceStart === true && secondsBool === true) {     // If space is pressed
   
     if (37 in keysDown) {     // User holding left
       player.x -= player.speed * modifier;
@@ -621,8 +640,9 @@ var intervalAnim = setInterval(function() {
 
 //===============================================
 
-// High score boolean
-var scoreUpdated = false;
+// High score boolean to compare player score to locally stored high scores
+var scoreUpdate = true;
+var highScore = null;
 
 //===============================================
 
@@ -651,7 +671,7 @@ var render = function() {
 
 //=============================================== 
 
-  if (32 in keysDown2) {     // If space is pressed
+  if (spaceStart === true) {     // If spaceStart is true then draw stage and animations
     ctx.drawImage(bgImage, 0, 0);
 
     // alien1 animation
@@ -771,26 +791,13 @@ var render = function() {
 
 //===============================================  
   
-  // If secondsBool is false then draw game over screen
+  // If secondsBool is false (timer === 0) then draw game over screen
   if (secondsBool === false) {
     ctx.drawImage(gameoverImage, 0, 0);
 
-    if (gameoverSoundSwitch === true) {
-      gameoverSound.play();     // Sound effect
-    };
-    gameoverSoundSwitch = false;
-
-    gameoverLoad = true;     // Boolean to load game over screen
-
-    if (13 in keysDown2 && gameoverLoad === true) {     // if enter is pressed and gameoverLoad is true then reload game
-     location.reload();
-    };
-
-    // Font
+    // Aliens rescued, time, and score
     ctx.fillStyle = 'white';
     ctx.font = "16px 'Press Start 2P'";
-
-    // Aliens rescued
     ctx.fillText(' = ' + ' ' + alien1Count, 385, 85);
     ctx.fillText(' = ' + ' ' + alien2Count, 385, 165);
     ctx.fillText(' = ' + ' ' + alien3Count, 385, 235);
@@ -798,54 +805,76 @@ var render = function() {
     ctx.fillText('TIME: ' +  seconds, 160, 555);
     ctx.fillText('SCORE: ' + scoreAndName[0], 480, 555);
 
-//===============================================
-    
-    if (scoreUpdated === false) {
-      scoreUpdated = true;
+    if (gameoverSoundSwitch === true) {
+      gameoverSoundSwitch = false;
+      gameoverSound.play();     // Sound effect
+    };
+
+    if (scoreUpdate === true) {
+      scoreUpdate = false;
+      disableDefaultKeys.pop();
       compareScore();
     };
+
+    if (highScore === true) {
+      ctx.drawImage(highScoreImage, 0, 325);
+
+      if (highScoreSoundSwitch === true) {
+        highScoreSoundSwitch = false;
+        highScoreSound.play();     // Sound effect
+      };
+    };
+
+    if (highScore === true && playerName === true) {     // If highScore is true and name input is entered
+      document.getElementById('scores').innerHTML = '';     // Clear high scores
+      addScore(scoreAndName);     // Add player score
+      printScore();     // Print new high score
+    };
+
+    if (highScore === false && 13 in keysDown) {     // if enter is pressed and gameoverReload is true then reload game
+      location.reload();
+    };
   };
 };
 
 //===============================================
 
-// Compare player score with locally stored high scores
+// Compare player score with locally stored high scores and create input if greater than locally stored high scores
 var compareScore = function() {
-  for (var i = 0; i < scoreList.length; i += 1) {
-    if (scoreAndName[0] > scoreList[i][0]) {
+  if (scoreAndName[0] > scoreList[9][0]) {
+    highScore = true;
 
-      // var scoreForm = document.createElement('FORM');
-      // scoreForm.setAttribute('id', 'playerinput');
-      // document.body.appendChild(scoreForm);
+    // Create form for high score
+    var scoreForm = document.createElement('FORM');
+    scoreForm.setAttribute('id', 'playerinput');
+    document.body.appendChild(scoreForm);
 
-      // var scoreInput = document.createElement('INPUT');
-      // scoreInput.setAttribute('type', 'text');
-      // scoreInput.setAttribute('maxlength', 18);
-      // document.getElementById('playerinput').appendChild(scoreInput);
+    // Create input for high score
+    var scoreInput = document.createElement('INPUT');
+    scoreInput.setAttribute('name', 'pname');
+    scoreInput.setAttribute('type', 'text');
+    scoreInput.setAttribute('maxlength', 18);
+    scoreInput.setAttribute('style', 'text-transform: uppercase');
+    document.getElementById('playerinput').appendChild(scoreInput);
 
-      if (i = scoreList.length) { //     If i = 10 then clear, add, and print new high score to HTML
-        document.getElementById('scores').innerHTML = '';
-        addScore(scoreAndName);
-        printScore();
-      };
-    };
+    // Create button
+    var button = document.createElement('BUTTON');
+    var buttonNode = document.createTextNode('OK');
+    button.appendChild(buttonNode);
+    button.setAttribute('onclick', 'getPlayerName()');
+    document.getElementById('playerinput').appendChild(button);
+  };
+
+  if (scoreAndName[0] < scoreList[9][0]) {
+    highScore = false;
   };
 };
 
-var scoreForm = document.createElement('FORM');
-      scoreForm.setAttribute('id', 'playerinput');
-      document.body.appendChild(scoreForm);
-
-      var scoreInput = document.createElement('INPUT');
-      scoreInput.setAttribute('type', 'text');
-      scoreInput.setAttribute('maxlength', 18);
-      scoreInput.setAttribute('style', 'text-transform: uppercase');
-      document.getElementById('playerinput').appendChild(scoreInput);
-
-
+//===============================================
 
 // Adds player score to scoreList
 var addScore = function(playerData) {
+  scoreList.pop();
   scoreList.push(playerData);
   saveScoreListToBrowser();
 };
