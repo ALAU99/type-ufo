@@ -7,6 +7,7 @@ canvas {
   margin-right: auto;
   margin-left: auto;
   border: 5px solid gray;
+  border-radius: 15px;
 }
 
 .container {
@@ -16,4 +17,19 @@ canvas {
   color: gray;
   border: 2px solid gray;
   width: 300px;
+}
+
+form {
+  position: absolute;
+  margin-top: -500px;
+  margin-left: 525px;
+}
+
+form input {
+  font-family: 'Press Start 2P';
+  color: white;
+  background-color: black;
+  padding: 10px;
+  border: 4px white solid;
+  border-radius: 2px;
 }
